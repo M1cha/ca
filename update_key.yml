@@ -78,6 +78,7 @@
       group: "{{ item.group }}"
 
   - name: Upload CA certificate
+    when: item.cacert is defined
     ansible.builtin.copy:
       src: "{{ playbook_dir }}/ca-{{ ca_name }}.pem"
       dest: "{{ item.cacert }}"
