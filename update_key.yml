@@ -1,0 +1,92 @@
+---
+- name: Check if certificate will expire
+  ansible.builtin.command: openssl x509 -checkend 86400 -noout -in "{{ item.cert }}"
+  register: result
+  ignore_errors: true
+
+- name: Update certificate
+  when: result is failed
+  block:
+  - name: Generate private key
+    ansible.builtin.shell: |
+      umask 0277
+      openssl genrsa -out {{ item.key | quote }} 4096
+      chown {{ item.owner | quote }}:{{ item.group | quote }} {{ item.key | quote }}
+      openssl req -new -key {{ item.key | quote }} -subj /CN={{ item.common_name | quote }}
+
+  - name: Generate CSR
+    ansible.builtin.command: openssl req -new -key {{ item.key | quote }} -subj /CN={{ item.common_name | quote }}
+    register: csr
+
+  - name: Create tempfile for extensions.conf
+    delegate_to: 127.0.0.1
+    ansible.builtin.tempfile:
+      state: file
+      suffix: .conf
+    register: extensions_conf
+
+  - name: Write extensions.conf
+    delegate_to: 127.0.0.1
+    ansible.builtin.copy:
+      dest: "{{ extensions_conf.path }}"
+      content: |
+        basicConstraints = CA:FALSE
+        keyUsage = digitalSignature, keyEncipherment
+        extendedKeyUsage = serverAuth,clientAuth
+        subjectKeyIdentifier = hash
+        authorityKeyIdentifier = keyid,issuer
+        subjectAltName = @alt_names
+
+        [alt_names]
+        DNS.1 = {{ item.common_name }}
+
+  - name: Get current date
+    delegate_to: 127.0.0.1
+    ansible.builtin.command: date '+%Y%m%d-%s-%N'
+    register: date
+
+  - name: Set certificate path
+    ansible.builtin.set_fact:
+      cert_path_local: "{{ playbook_dir }}/certs/{{ ca_name }}-servers-{{ item.name }}-{{ date.stdout }}.pem"
+
+  - name: Sign certificate
+    delegate_to: 127.0.0.1
+    ansible.builtin.command: >
+      openssl x509
+      -engine pkcs11
+      -req
+      -CA "{{ playbook_dir }}/ca-{{ ca_name }}.pem"
+      -CAkey "pkcs11:object=CA-{{ ca_name }};type=private"
+      -CAkeyform engine
+      -CAcreateserial
+      -clrext
+      -extfile {{ extensions_conf.path | quote }}
+      -days 365
+      -sha512
+      -out "{{ cert_path_local }}"
+    args:
+      stdin: "{{ csr.stdout }}"
+    environment:
+      OPENSSL_CONF: "{{ playbook_dir }}/openssl.conf"
+
+  - name: Upload server certificate
+    ansible.builtin.copy:
+      src: "{{ cert_path_local }}"
+      dest: "{{ item.cert }}"
+      mode: '0400'
+      owner: "{{ item.owner }}"
+      group: "{{ item.group }}"
+
+  - name: Upload CA certificate
+    ansible.builtin.copy:
+      src: "{{ playbook_dir }}/ca-{{ ca_name }}.pem"
+      dest: "{{ item.cacert }}"
+      mode: '0400'
+      owner: "{{ item.owner }}"
+      group: "{{ item.group }}"
+
+  - name: Restart service
+    ansible.builtin.systemd:
+      state: restarted
+      name: "{{ item.service }}"
+
