@@ -7,6 +7,20 @@
 - name: Update certificate
   when: result is failed
   block:
+  - name: Create cert directory
+    when: item.create_directories is defined and (item.create_directories|bool)
+    ansible.builtin.file:
+      path: "{{ item.cert | dirname }}"
+      state: directory
+      mode: '0755'
+
+  - name: Create key directory
+    when: item.create_directories is defined and (item.create_directories|bool)
+    ansible.builtin.file:
+      path: "{{ item.key | dirname }}"
+      state: directory
+      mode: '0755'
+
   - name: Generate private key
     ansible.builtin.shell: |
       umask 0277
