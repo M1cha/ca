@@ -43,6 +43,7 @@
     delegate_to: 127.0.0.1
     ansible.builtin.copy:
       dest: "{{ extensions_conf.path }}"
+      mode: '0600'
       content: |
         basicConstraints = CA:FALSE
         keyUsage = digitalSignature, keyEncipherment
@@ -104,4 +105,3 @@
     ansible.builtin.systemd:
       state: restarted
       name: "{{ item.service }}"
-

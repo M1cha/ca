@@ -15,5 +15,5 @@
         mode: '0755'
 
     - name: Run update_key.yml
-      include_tasks: update_key.yml
+      ansible.builtin.include_tasks: update_key.yml
       loop: "{{ keys }}"
