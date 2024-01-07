@@ -62,7 +62,7 @@
 
   - name: Set certificate path
     ansible.builtin.set_fact:
-      cert_path_local: "{{ playbook_dir }}/certs/{{ ca_name }}-servers-{{ item.name }}-{{ date.stdout }}.pem"
+      cert_path_local: "{{ playbook_dir }}/certs/{{ item.ca }}-servers-{{ item.name }}-{{ date.stdout }}.pem"
 
   - name: Sign certificate
     delegate_to: 127.0.0.1
@@ -70,8 +70,8 @@
       openssl x509
       -engine pkcs11
       -req
-      -CA "{{ playbook_dir }}/ca-{{ ca_name }}.pem"
-      -CAkey "pkcs11:object=CA-{{ ca_name }};type=private"
+      -CA "{{ playbook_dir }}/ca-{{ item.ca }}.pem"
+      -CAkey "pkcs11:object=CA-{{ item.ca }};type=private"
       -CAkeyform engine
       -CAcreateserial
       -clrext
@@ -95,7 +95,7 @@
   - name: Upload CA certificate
     when: item.cacert is defined
     ansible.builtin.copy:
-      src: "{{ playbook_dir }}/ca-{{ ca_name }}.pem"
+      src: "{{ playbook_dir }}/ca-{{ item.ca }}.pem"
       dest: "{{ item.cacert }}"
       mode: '0400'
       owner: "{{ item.owner }}"
