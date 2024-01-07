@@ -102,6 +102,7 @@
       group: "{{ item.group }}"
 
   - name: Restart service
+    when: item.service is defined
     ansible.builtin.systemd:
       state: restarted
       name: "{{ item.service }}"
