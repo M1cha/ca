@@ -1,6 +1,6 @@
 ---
 - name: Main
-  hosts: ungrouped
+  hosts: "{{ hosts | default('ungrouped') }}"
   gather_facts: false
   vars:
     certs_dir: "{{ playbook_dir }}/certs"
