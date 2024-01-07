@@ -116,6 +116,13 @@
       owner: "{{ item.owner }}"
       group: "{{ item.group }}"
 
+  - name: Create combined PEM
+    when: item.combined is defined
+    ansible.builtin.shell: |
+      umask 0277
+      cat {{ item.cert | quote }} {{ item.key | quote }} > {{ item.combined | quote }}
+      chown {{ item.owner | quote }}:{{ item.group | quote }} {{ item.key | quote }}
+
   - name: Restart service
     when: item.service is defined
     ansible.builtin.systemd:
