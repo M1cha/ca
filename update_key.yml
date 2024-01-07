@@ -71,6 +71,12 @@
         [alt_names]
         DNS.1 = {{ item.common_name }}
 
+        {% if item.additional_domains is defined %}
+        {% for domain in item.additional_domains %}
+        DNS.{{ loop.index + 1 }} = {{ domain }}
+        {% endfor %}
+        {% endif %}
+
   - name: Get current date
     delegate_to: 127.0.0.1
     ansible.builtin.command: date '+%Y%m%d-%s-%N'
