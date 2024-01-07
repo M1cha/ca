@@ -13,6 +13,16 @@
         state: directory
         mode: '0755'
 
-    - name: Run update_key.yml
+    - name: Run update_key.yml for servers
+      when: servers is defined
       ansible.builtin.include_tasks: update_key.yml
-      loop: "{{ keys }}"
+      loop: "{{ servers }}"
+      vars:
+        cert_type: server
+
+    - name: Run update_key.yml for clients
+      when: clients is defined
+      ansible.builtin.include_tasks: update_key.yml
+      loop: "{{ clients }}"
+      vars:
+        cert_type: client

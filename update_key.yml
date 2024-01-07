@@ -39,7 +39,22 @@
       suffix: .conf
     register: extensions_conf
 
-  - name: Write extensions.conf
+  - name: Write client extensions.conf
+    when: cert_type == "client"
+    delegate_to: 127.0.0.1
+    ansible.builtin.copy:
+      dest: "{{ extensions_conf.path }}"
+      mode: '0600'
+      content: |
+        basicConstraints = CA:FALSE
+        keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+        extendedKeyUsage = clientAuth
+        subjectKeyIdentifier = hash
+        authorityKeyIdentifier = keyid,issuer
+        nsCertType = client
+
+  - name: Write server extensions.conf
+    when: cert_type == "server"
     delegate_to: 127.0.0.1
     ansible.builtin.copy:
       dest: "{{ extensions_conf.path }}"
@@ -62,7 +77,7 @@
 
   - name: Set certificate path
     ansible.builtin.set_fact:
-      cert_path_local: "{{ playbook_dir }}/certs/{{ item.ca }}-servers-{{ item.name }}-{{ date.stdout }}.pem"
+      cert_path_local: "{{ playbook_dir }}/certs/{{ item.ca }}-{{ cert_type }}-{{ item.name }}-{{ date.stdout }}.pem"
 
   - name: Sign certificate
     delegate_to: 127.0.0.1
