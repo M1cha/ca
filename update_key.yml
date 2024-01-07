@@ -23,6 +23,7 @@
 
   - name: Generate private key
     ansible.builtin.shell: |
+      set -euo pipefail
       umask 0277
       openssl genrsa -out {{ item.key | quote }} 4096
       chown {{ item.owner | quote }}:{{ item.group | quote }} {{ item.key | quote }}
@@ -119,6 +120,7 @@
   - name: Create combined PEM
     when: item.combined is defined
     ansible.builtin.shell: |
+      set -euo pipefail
       umask 0277
       cat {{ item.cert | quote }} {{ item.key | quote }} > {{ item.combined | quote }}
       chown {{ item.owner | quote }}:{{ item.group | quote }} {{ item.key | quote }}
