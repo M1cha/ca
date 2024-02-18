@@ -131,6 +131,14 @@
       cat {{ item.cert | quote }} {{ item.key | quote }} > {{ item.combined | quote }}
       chown {{ item.owner | quote }}:{{ item.group | quote }} {{ item.key | quote }}
 
+  - name: Create PFX
+    when: item.pfx is defined
+    ansible.builtin.shell: |
+      set -euo pipefail
+      umask 0277
+      openssl pkcs12 -export -out {{ item.pfx | quote }} -inkey {{ item.key | quote }} -in {{ item.cert | quote }} -certfile {{ playbook_dir }}/ca-{{ item.ca }}.pem
+      chown {{ item.owner | quote }}:{{ item.group | quote }} {{ item.pfx | quote }}
+
   - name: Restart service
     when: item.service is defined
     ansible.builtin.systemd:
