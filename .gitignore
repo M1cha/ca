@@ -1,4 +1,5 @@
 /certs
+/target
 *.pem
 *.key
 *.crt
