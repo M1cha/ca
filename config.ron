@@ -168,6 +168,11 @@
                 chmod: "0400",
                 chown: "m1cha:m1cha",
             ))),
+            combined: Some(File(FileLocation(
+                path: "/home/m1cha/.restic/ssl_combined.pem",
+                chmod: "0400",
+                chown: "m1cha:m1cha",
+            ))),
         ),
         (
             id: "m1cha-tlsproxy-client",
