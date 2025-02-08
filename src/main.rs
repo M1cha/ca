@@ -502,6 +502,15 @@ fn process_key(cli: &Cli, config: &Config, key: &Key) -> anyhow::Result<()> {
     }
 
     if let Some(location) = &key.pfx {
+        let file_key = match &key.key {
+            Some(Location::File(f)) => &f.path,
+            _ => todo!(),
+        };
+        let file_cert = match &key.cert {
+            Some(Location::File(f)) => &f.path,
+            _ => todo!(),
+        };
+
         let mut pfx = Vec::new();
         duct::cmd!(
             "openssl",
@@ -510,10 +519,11 @@ fn process_key(cli: &Cli, config: &Config, key: &Key) -> anyhow::Result<()> {
             "-out",
             "-",
             "-inkey",
+            file_key,
             "-in",
-            private_key,
+            file_cert,
             "-certfile",
-            &local_cert_path
+            format!("ca-{ca_name}.pem")
         )
         .reader()
         .context("Failed to spawn pfx generator")?
