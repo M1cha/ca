@@ -67,15 +67,6 @@
             key: Some(PodmanSecret("tlsproxy_modem_key")),
         ),
         (
-            id: "pihole",
-            host: "homeserver",
-            ca: "main",
-            type: Server,
-            common_name: "pihole.home.arpa",
-            service: Some("pihole.service"),
-            combined: Some(PodmanSecret("pihole_https_pem")),
-        ),
-        (
             id: "restic-backup-1",
             host: "homeserver",
             ca: "restic",
