@@ -497,7 +497,7 @@ fn process_key(cli: &Cli, config: &Config, key: &Key) -> anyhow::Result<()> {
     }
 
     if let Some(location) = &key.combined {
-        let combined = format!("{cert}{private_key}");
+        let combined = format!("{cert}\n{private_key}");
         client.write(location, combined.as_bytes())?;
     }
 
