@@ -1,7 +1,7 @@
 (
     hosts: {
         "homeserver": Ssh(SshHost(
-            host: "192.168.43.107",
+            host: "homeserver.home.arpa",
         )),
         "lxd-2": Ssh(SshHost(
             host: "lxd-2.home.arpa",
