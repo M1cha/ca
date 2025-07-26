@@ -6,9 +6,6 @@
         "lxd-2": Ssh(SshHost(
             host: "lxd.parents.home.arpa",
         )),
-        "wifiap": Ssh(SshHost(
-            host: "wifiap.home.arpa",
-        )),
         "local": Local,
     },
 
@@ -216,26 +213,6 @@
                 chmod: "0400",
                 chown: "root:root",
             ))),
-        ),
-
-        (
-            id: "wifiap-uhttpd",
-            host: "wifiap",
-            ca: "main",
-            type: Server,
-            common_name: "wifiap.home.arpa",
-            cert: Some(File(FileLocation(
-                path: "/etc/uhttpd.crt",
-                chmod: "0400",
-                chown: "root:root",
-            ))),
-            key: Some(File(FileLocation(
-                path: "/etc/uhttpd.key",
-                chmod: "0400",
-                chown: "root:root",
-            ))),
-            // It's too slow for more.
-            key_size: 2048,
         ),
     ],
 )
