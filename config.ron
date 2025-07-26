@@ -103,15 +103,6 @@
             ))),
         ),
         (
-            id: "switch0",
-            host: "homeserver",
-            ca: "main",
-            type: Server,
-            common_name: "switch0.home.arpa",
-            cert: Some(PodmanSecret("tlsproxy_switch0_cert")),
-            key: Some(PodmanSecret("tlsproxy_switch0_key")),
-        ),
-        (
             id: "switch1",
             host: "homeserver",
             ca: "main",
