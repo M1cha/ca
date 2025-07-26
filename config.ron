@@ -4,7 +4,7 @@
             host: "homeserver.home.arpa",
         )),
         "lxd-2": Ssh(SshHost(
-            host: "lxd-2.home.arpa",
+            host: "lxd.parents.home.arpa",
         )),
         "wifiap": Ssh(SshHost(
             host: "wifiap.home.arpa",
