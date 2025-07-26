@@ -141,6 +141,16 @@
             cert: Some(PodmanSecret("tlsproxy_switch3_cert")),
             key: Some(PodmanSecret("tlsproxy_switch3_key")),
         ),
+        (
+            id: "unifi",
+            host: "homeserver",
+            ca: "main",
+            type: Server,
+            common_name: "unifi.homeserver.home.arpa",
+            service: Some("unifi.service"),
+            cert: Some(PodmanSecret("unifi_ssl_cert")),
+            key: Some(PodmanSecret("unifi_ssl_key")),
+        ),
 
         // My main computer.
         (
