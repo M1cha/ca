@@ -15,6 +15,10 @@ fn default_keysize() -> usize {
     4096
 }
 
+fn default_days() -> usize {
+    365
+}
+
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
 struct SshHost {
     /// Host name or IP address.
@@ -110,6 +114,8 @@ struct Key {
     tags: Vec<String>,
     #[serde(default = "default_keysize")]
     key_size: usize,
+    #[serde(default = "default_days")]
+    days: usize,
 }
 
 impl Key {
@@ -471,7 +477,7 @@ fn process_key(cli: &Cli, config: &Config, key: &Key) -> anyhow::Result<()> {
         "-extfile",
         ext_file_path,
         "-days",
-        "365",
+        format!("{}", key.days),
         "-sha512",
         "-out",
         "-"
