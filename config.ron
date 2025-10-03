@@ -22,6 +22,19 @@
             key: Some(PodmanSecret("bitwarden_https_key")),
         ),
         (
+            id: "emqx",
+            host: "homeserver",
+            ca: "main",
+            type: Server,
+            common_name: "emqx.home.arpa",
+            cert: Some(PodmanSecret("emqx_https_cert")),
+            key: Some(PodmanSecret("emqx_https_key")),
+            additional_domains: [
+                "emqx.homeserver.home.arpa",
+                "emqx",
+            ],
+        ),
+        (
             id: "gotify",
             host: "homeserver",
             ca: "main",
