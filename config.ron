@@ -205,5 +205,15 @@
                 chown: "root:root",
             ))),
         ),
+        (
+            id: "zigbee2mqtt",
+            host: "homeserver",
+            ca: "main",
+            type: Server,
+            common_name: "zigbee2mqtt.home.arpa",
+            service: Some("zigbee2mqtt.service"),
+            cert: Some(PodmanSecret("zigbee2mqtt_https_cert")),
+            key: Some(PodmanSecret("zigbee2mqtt_https_key")),
+        ),
     ],
 )
