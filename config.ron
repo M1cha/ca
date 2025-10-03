@@ -163,6 +163,32 @@
             key: Some(PodmanSecret("zigbee2mqtt_https_key")),
         ),
 
+        // MQTT
+        (
+            id: "emqx-mqtt",
+            host: "homeserver",
+            ca: "mqtt",
+            type: Server,
+            common_name: "emqx.home.arpa",
+            cert: Some(PodmanSecret("emqx_mqtt_cert")),
+            key: Some(PodmanSecret("emqx_mqtt_key")),
+            additional_domains: [
+                "emqx.homeserver.home.arpa",
+                "emqx",
+            ],
+            days: 3650,
+        ),
+        (
+            id: "zigbee2mqtt-mqtt",
+            host: "homeserver",
+            ca: "mqtt",
+            type: Client,
+            common_name: "zigbee2mqtt",
+            cert: Some(PodmanSecret("zigbee2mqtt_mqtt_cert")),
+            key: Some(PodmanSecret("zigbee2mqtt_mqtt_key")),
+            days: 3650,
+        ),
+
         // My main computer.
         (
             id: "m1cha-restic-client",
