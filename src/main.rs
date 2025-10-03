@@ -173,7 +173,7 @@ struct PodmanSecret {
     data: String,
 }
 
-/// Calls Into<String> on evert argument and runs the cmd through given client.
+/// Calls Into<String> on every argument and runs the cmd through given client.
 macro_rules! cmd {
     ( $client:expr, $stdin:expr $(, $arg:expr )* $(,)? ) => {
         {
