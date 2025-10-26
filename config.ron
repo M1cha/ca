@@ -44,6 +44,7 @@
             cert: Some(PodmanSecret("gotify_https_cert")),
             key: Some(PodmanSecret("gotify_https_key")),
             additional_domains: [
+                "gotify.homeserver.home.arpa",
                 "gotify",
             ],
         ),
