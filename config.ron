@@ -35,6 +35,16 @@
             ],
         ),
         (
+            id: "freshrss",
+            host: "homeserver",
+            ca: "main",
+            type: Server,
+            common_name: "freshrss.home.arpa",
+            service: Some("freshrss-traefik.service"),
+            cert: Some(PodmanSecret("freshrss_https_cert")),
+            key: Some(PodmanSecret("freshrss_https_key")),
+        ),
+        (
             id: "gotify",
             host: "homeserver",
             ca: "main",
