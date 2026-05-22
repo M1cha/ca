@@ -144,6 +144,15 @@
             key: Some(PodmanSecret("tlsproxy_switch3_key")),
         ),
         (
+            id: "switch4",
+            host: "homeserver",
+            ca: "main",
+            type: Server,
+            common_name: "switch4.home.arpa",
+            cert: Some(PodmanSecret("tlsproxy_switch4_cert")),
+            key: Some(PodmanSecret("tlsproxy_switch4_key")),
+        ),
+        (
             id: "uosserver",
             host: "homeserver",
             ca: "main",
